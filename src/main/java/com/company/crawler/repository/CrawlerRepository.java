@@ -4,11 +4,13 @@ import com.company.crawler.exceptions.CrawlerException;
 import com.company.crawler.model.Crawler;
 import com.company.crawler.service.CrawlerService;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -52,12 +54,21 @@ public class CrawlerRepository {
         if (maxDepth.isPresent())
             LOGGER.info("maxDepth = {}", maxDepth.get());
 
-        Crawler crawler = crawlerService.crawlURL(url, maxDepth.isPresent() ? maxDepth.get() : MAX_DEPTH);
+        Object crawler = crawlerService.crawl(url, maxDepth.isPresent() ? maxDepth.get() : MAX_DEPTH);
 
         LOGGER.info("[CRAWL-COMPLETED] URL = {} ", url);
+        return crawlResult(url, maxDepth);
 
+    }
+
+    /**
+     * Result for Crawl
+     *
+     */
+    @Cacheable("webcrawlResult" )
+    private ResponseEntity crawlResult(URL url, Optional<Integer> maxDepth){
+        Object crawler = crawlerService.crawl(url, maxDepth.isPresent() ? maxDepth.get() : MAX_DEPTH);
         return new ResponseEntity<>(crawler, HttpStatus.OK);
-
     }
 
 

@@ -1,5 +1,7 @@
 package com.company.crawler.model;
 
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +10,7 @@ import java.util.Objects;
  *
  * @Author: Jon Bonso
  */
+
 public class Crawler {
 
     private String url;

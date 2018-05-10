@@ -1,8 +1,6 @@
 package com.company.crawler;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,6 @@ public class SimpleWebCrawlerApplicationTests {
         String testUrl = "/web-crawler?url=http://www.didthanoskill.me";
         String body = this.restTemplate.getForObject(testUrl, String.class);
 
-        System.out.println("body = " + body.toString());
         JSONObject response = new JSONObject(body);
         JSONObject crawlResult = new JSONObject(response.toString());
 
@@ -49,13 +46,12 @@ public class SimpleWebCrawlerApplicationTests {
         String testUrl = "/web-crawler?url=http://www.goole.com&maxDepth=1";
         String body = this.restTemplate.getForObject(testUrl, String.class);
 
-        System.out.println("body = " + body.toString());
         JSONObject response = new JSONObject(body);
         JSONObject crawlResult = new JSONObject(response.toString());
 
         assertThat(crawlResult.get("url")).isEqualTo("http://www.goole.com");
         assertThat(crawlResult.get("title")).isEqualTo("Goole.com - Search the Net or visit Goole");
-
+        assertThat(crawlResult.has("nodes"));
     }
 
     /**
